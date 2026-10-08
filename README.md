@@ -16,12 +16,12 @@ A [wmux](https://github.com/kevmtt/wmux)/[cmux](https://cmux.com)-style terminal
 
 Download from [Releases](https://github.com/adlynfakhreyz/lymux/releases):
 
-- **.deb** (Ubuntu/Debian): `sudo apt install ./lymux_0.5.1_amd64.deb`. Adds lymux to your app menu with its icon.
-- **AppImage** (any distro): `chmod +x lymux-0.5.1-x86_64.AppImage && ./lymux-0.5.1-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
+- **.deb** (Ubuntu/Debian): `sudo apt install ./lymux_0.5.2_amd64.deb`. Adds lymux to your app menu with its icon.
+- **AppImage** (any distro): `chmod +x lymux-0.5.2-x86_64.AppImage && ./lymux-0.5.2-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
 
 ## Features
 
-- Workspaces in a sidebar, each showing its current directory and git branch
+- Workspaces in a sidebar, each showing its current directory and git branch; drag one to reorder
 - Split panes right/down, resize by dragging dividers
 - Drag a pane by its header onto another pane: drop on an edge to dock it there, or in the middle to swap
 - Layout, sizes and each pane's directory are saved and restored on relaunch
@@ -76,7 +76,7 @@ main process (Node)                         renderer (React)
 
 1. Agent status in the sidebar: a local socket that Claude Code hooks report to (working / needs input / done), shown as dots per workspace.
 2. Shells that survive closing the app: move PtyManager into a background daemon the app connects to.
-3. Drag panes to other workspaces; drag-reorder workspaces.
+3. Drag panes to other workspaces.
 4. AppArmor profile so the AppImage and dev builds can keep Chromium's sandbox.
 5. Swap xterm.js for libghostty-vt.
 

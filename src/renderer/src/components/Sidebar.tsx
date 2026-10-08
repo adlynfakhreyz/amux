@@ -14,6 +14,8 @@ interface Props {
   onNew: () => void
   onRename: (id: string, name: string) => void
   onClose: (id: string) => void
+  /** Move workspace `id` so it lands before `beforeId` (or at the end when null). */
+  onReorder: (id: string, beforeId: string | null) => void
   onToggleMode: () => void
   onCollapse: () => void
   onResizeStart: (e: React.MouseEvent) => void
@@ -51,6 +53,14 @@ const CollapseIcon = (): React.JSX.Element => (
 export function Sidebar(props: Props): React.JSX.Element {
   const { workspaces, activeId, meta, homeDir, width, mode, peek } = props
   const [editing, setEditing] = useState<string | null>(null)
+  const [dragId, setDragId] = useState<string | null>(null)
+  // Where the dragged workspace would land: above or below this one.
+  const [drop, setDrop] = useState<{ id: string; after: boolean } | null>(null)
+
+  const endDrag = (): void => {
+    setDragId(null)
+    setDrop(null)
+  }
   const floating = mode === 'hover'
 
   return (
@@ -81,7 +91,34 @@ export function Sidebar(props: Props): React.JSX.Element {
           return (
             <li
               key={ws.id}
-              className={`workspace${ws.id === activeId ? ' workspace-active' : ''}`}
+              className={
+                `workspace${ws.id === activeId ? ' workspace-active' : ''}` +
+                (ws.id === dragId ? ' workspace-dragging' : '') +
+                (drop?.id === ws.id ? (drop.after ? ' workspace-drop-after' : ' workspace-drop-before') : '')
+              }
+              draggable={editing !== ws.id}
+              onDragStart={(e) => {
+                e.dataTransfer.effectAllowed = 'move'
+                e.dataTransfer.setData('text/plain', ws.id)
+                setDragId(ws.id)
+              }}
+              onDragOver={(e) => {
+                if (!dragId) return
+                e.preventDefault()
+                e.dataTransfer.dropEffect = 'move'
+                const r = e.currentTarget.getBoundingClientRect()
+                const after = e.clientY > r.top + r.height / 2
+                if (drop?.id !== ws.id || drop.after !== after) setDrop({ id: ws.id, after })
+              }}
+              onDrop={(e) => {
+                e.preventDefault()
+                if (dragId && drop) {
+                  const i = workspaces.findIndex((w) => w.id === drop.id) + (drop.after ? 1 : 0)
+                  props.onReorder(dragId, workspaces[i]?.id ?? null)
+                }
+                endDrag()
+              }}
+              onDragEnd={endDrag}
               onClick={() => props.onSelect(ws.id)}
               onDoubleClick={() => setEditing(ws.id)}
             >
@@ -136,6 +173,7 @@ export function Sidebar(props: Props): React.JSX.Element {
           </div>
         ))}
         <div className="shortcut-hint">Drag a pane's header to move it</div>
+        <div className="shortcut-hint">Drag a workspace to reorder it</div>
       </div>
       <div className="sidebar-resizer" title="Drag to resize" onMouseDown={props.onResizeStart} />
     </aside>

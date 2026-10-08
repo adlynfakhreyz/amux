@@ -183,6 +183,31 @@ body.resizing-sidebar {
   background: var(--bg-hover);
 }
 
+.workspace-dragging {
+  opacity: 0.4;
+}
+
+/* Insertion line where a dragged workspace will land. */
+.workspace-drop-before::before,
+.workspace-drop-after::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.workspace-drop-before::before {
+  top: -2px;
+}
+
+.workspace-drop-after::after {
+  bottom: -2px;
+}
+
 .workspace-active {
   background: var(--bg-active);
   border-left-color: var(--accent);

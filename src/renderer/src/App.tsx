@@ -184,6 +184,18 @@ export function App(): React.JSX.Element | null {
     setSession((s) => s && { ...s, workspaces: [...s.workspaces, ws], activeWorkspaceId: ws.id })
   }
 
+  const reorderWorkspace = (id: string, beforeId: string | null): void => {
+    if (id === beforeId) return
+    setSession((s) => {
+      if (!s) return s
+      const moved = s.workspaces.find((w) => w.id === id)
+      if (!moved) return s
+      const rest = s.workspaces.filter((w) => w.id !== id)
+      const i = beforeId ? rest.findIndex((w) => w.id === beforeId) : rest.length
+      return { ...s, workspaces: [...rest.slice(0, i), moved, ...rest.slice(i)] }
+    })
+  }
+
   const cycleWorkspace = (step: number): void => {
     setSession((s) => {
       if (!s) return s
@@ -258,6 +270,7 @@ export function App(): React.JSX.Element | null {
           onNew={() => void addWorkspace()}
           onRename={(id, name) => updateWorkspace(id, (w) => ({ ...w, name }))}
           onClose={closeWorkspace}
+          onReorder={reorderWorkspace}
           onToggleMode={toggleSidebarMode}
           onCollapse={() => setUi({ sidebarOpen: false })}
           onResizeStart={startSidebarResize}
