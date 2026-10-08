@@ -6,7 +6,9 @@
 
 A [wmux](https://github.com/kevmtt/wmux)/[cmux](https://cmux.com)-style terminal multiplexer for Linux: a workspace sidebar, draggable split panes, and session persistence. cmux is macOS-only and wmux is Windows-only; lymux fills that gap on Linux.
 
-![lymux screenshot](docs/screenshot.png)
+![lymux demo: splitting panes, dragging a pane, zoom, workspaces and the auto-hide sidebar](docs/demo.gif)
+
+<sub>Recorded from the app itself with `npm run demo`. Full-quality MP4 in the [latest release](https://github.com/adlynfakhreyz/lymux/releases/latest).</sub>
 
 > Early stage (v0.5). Expect rough edges.
 
@@ -37,6 +39,7 @@ npm install      # also rebuilds node-pty for Electron
 npm run dev      # dev mode with hot reload
 npm run dist     # build AppImage + .deb into dist/
 npm run test:e2e # drive the real window: drag, zoom, sidebar
+npm run demo     # record docs/demo.gif and dist/lymux-demo.mp4
 ```
 
 `npm run dev` and `npm start` pass `--no-sandbox` because Ubuntu 24.04's AppArmor blocks Chromium's sandbox for unpackaged Electron. The .deb installs a proper setuid sandbox; the AppImage opts out of the sandbox automatically for the same reason.

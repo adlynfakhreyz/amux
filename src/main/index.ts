@@ -1,6 +1,7 @@
 import { join } from 'node:path'
 import { homedir } from 'node:os'
 import { readFile, writeFile } from 'node:fs/promises'
+import { writeFileSync } from 'node:fs'
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import { PtyManager } from './pty'
 import { loadSession, saveSession } from './session'
@@ -48,6 +49,39 @@ function createWindow(): void {
         if (image) await writeFile(shot, image.toPNG())
         app.quit()
       }, Number(process.env.LYMUX_SCREENSHOT_DELAY ?? 5000))
+    })
+  }
+
+  // Dev aid for demo videos: LYMUX_RECORD=/dir saves PNG frames of the window (as fast as capture allows, up to
+  // ~12 fps) plus frames.txt, an ffmpeg concat list with each frame's real on-screen duration.
+  const recordDir = process.env.LYMUX_RECORD
+  if (recordDir) {
+    const frames: { file: string; at: number }[] = []
+    let busy = false
+    win.webContents.once('did-finish-load', () => {
+      const timer = setInterval(async () => {
+        if (busy || !win || win.isDestroyed()) return
+        busy = true
+        try {
+          const at = Date.now()
+          const image = await win.webContents.capturePage()
+          const file = join(recordDir, `frame-${String(frames.length).padStart(5, '0')}.png`)
+          await writeFile(file, image.toPNG())
+          frames.push({ file, at })
+        } finally {
+          busy = false
+        }
+      }, 80)
+      app.once('before-quit', () => {
+        clearInterval(timer)
+        const list = frames.map((f, i) => {
+          const next = frames[i + 1]?.at ?? f.at + 80
+          return `file '${f.file}'\nduration ${((next - f.at) / 1000).toFixed(3)}`
+        })
+        // concat demuxer quirk: repeat the last file so its duration is honoured.
+        if (frames.length) list.push(`file '${frames[frames.length - 1].file}'`)
+        writeFileSync(join(recordDir, 'frames.txt'), list.join('\n') + '\n')
+      })
     })
   }
 
