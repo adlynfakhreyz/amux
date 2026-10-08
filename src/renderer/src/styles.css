@@ -1,6 +1,6 @@
 :root {
-  /* Background opacity (Settings > Ctrl+Shift+[ / ]). Only backgrounds use it, so text stays crisp. */
-  --alpha: 1;
+  /* Fixed background opacity: only backgrounds use it, so text stays crisp while desktop blur shows through. */
+  --alpha: 0.88;
   --bg: rgb(20 22 27 / var(--alpha));
   --bg-sidebar: rgb(15 17 21 / var(--alpha));
   --bg-hover: #1c1f26;
@@ -47,7 +47,7 @@ body,
 
 /* Hover mode: the sidebar floats over the panes (so terminals never resize) and slides in from the left. */
 .sidebar-floating {
-  /* Floats over terminal text, so keep it nearly opaque regardless of the opacity setting. */
+  /* Floats over terminal text, so keep it nearly opaque regardless of the background opacity. */
   background: rgb(15 17 21 / 0.97);
   position: absolute;
   top: 0;

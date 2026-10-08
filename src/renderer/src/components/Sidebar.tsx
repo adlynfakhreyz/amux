@@ -29,8 +29,7 @@ const SHORTCUTS: [string[], string][] = [
   [['Ctrl+Shift', 'N'], 'New workspace'],
   [['Ctrl', 'PgUp/Dn'], 'Switch workspace'],
   [['Ctrl+Shift', 'B'], 'Toggle sidebar'],
-  [['Ctrl', '+ / −'], 'Zoom'],
-  [['Ctrl+Shift', '[ / ]'], 'Opacity']
+  [['Ctrl', '+ / −'], 'Zoom']
 ]
 
 const shortPath = (path: string | null | undefined, home: string): string =>

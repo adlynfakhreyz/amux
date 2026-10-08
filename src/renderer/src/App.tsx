@@ -19,9 +19,7 @@ const api = window.lymux
 const META_POLL_MS = 2000
 const SAVE_DEBOUNCE_MS = 1000
 
-const DEFAULT_UI: UiSettings = { fontSize: 13, sidebarWidth: 248, sidebarMode: 'pinned', sidebarOpen: true, opacity: 0.88 }
-const OPACITY_MIN = 0.5
-const OPACITY_STEP = 0.04
+const DEFAULT_UI: UiSettings = { fontSize: 13, sidebarWidth: 248, sidebarMode: 'pinned', sidebarOpen: true }
 const FONT_MIN = 8
 const FONT_MAX = 32
 const SIDEBAR_MIN = 180
@@ -88,22 +86,13 @@ export function App(): React.JSX.Element | null {
   // Apply the saved/changed font size to every terminal.
   useEffect(() => setFontSize(ui.fontSize), [ui.fontSize])
 
-  // Background opacity is a CSS variable used by every background colour.
-  useEffect(() => document.documentElement.style.setProperty('--alpha', String(ui.opacity)), [ui.opacity])
-
-  /** Brief, unobtrusive indicator in the corner (zoom level, opacity). */
+  /** Brief, unobtrusive indicator in the corner (zoom level). */
   const flash = (text: string): void => {
     clearTimeout(toastTimer.current)
     setToast(text)
     toastTimer.current = setTimeout(() => setToast(null), 1200)
   }
 
-  const changeOpacity = (step: number): void => {
-    const next = Math.round(clamp(uiRef.current.opacity + step, OPACITY_MIN, 1) * 100) / 100
-    uiRef.current = { ...uiRef.current, opacity: next }
-    setUi({ opacity: next })
-    flash(`Opacity ${Math.round(next * 100)}%`)
-  }
 
   const zoom = (delta: number | 'reset'): void => {
     const fontSize = delta === 'reset' ? DEFAULT_UI.fontSize : clamp(uiRef.current.fontSize + delta, FONT_MIN, FONT_MAX)
@@ -207,8 +196,8 @@ export function App(): React.JSX.Element | null {
   // App shortcuts are caught in the capture phase, before the focused terminal sees the key.
   const draggingRef = useRef(draggingId)
   draggingRef.current = draggingId
-  const handlers = useRef({ split, closePane, addWorkspace, cycleWorkspace, zoom, toggleSidebar, changeOpacity })
-  handlers.current = { split, closePane, addWorkspace, cycleWorkspace, zoom, toggleSidebar, changeOpacity }
+  const handlers = useRef({ split, closePane, addWorkspace, cycleWorkspace, zoom, toggleSidebar })
+  handlers.current = { split, closePane, addWorkspace, cycleWorkspace, zoom, toggleSidebar }
   useEffect(() => {
     const onKey = (e: KeyboardEvent): void => {
       const h = handlers.current
@@ -221,8 +210,6 @@ export function App(): React.JSX.Element | null {
       else if (e.ctrlKey && e.code === 'PageDown') h.cycleWorkspace(1)
       else if (e.ctrlKey && e.code === 'PageUp') h.cycleWorkspace(-1)
       else if (e.ctrlKey && e.shiftKey && e.code === 'KeyB') h.toggleSidebar()
-      else if (e.ctrlKey && e.shiftKey && e.code === 'BracketRight') h.changeOpacity(OPACITY_STEP)
-      else if (e.ctrlKey && e.shiftKey && e.code === 'BracketLeft') h.changeOpacity(-OPACITY_STEP)
       else if (e.ctrlKey && (e.code === 'Equal' || e.code === 'NumpadAdd')) h.zoom(1)
       else if (e.ctrlKey && (e.code === 'Minus' || e.code === 'NumpadSubtract')) h.zoom(-1)
       else if (e.ctrlKey && (e.code === 'Digit0' || e.code === 'Numpad0')) h.zoom('reset')

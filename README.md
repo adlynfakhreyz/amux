@@ -14,8 +14,8 @@ A [wmux](https://github.com/kevmtt/wmux)/[cmux](https://cmux.com)-style terminal
 
 Download from [Releases](https://github.com/adlynfakhreyz/lymux/releases):
 
-- **.deb** (Ubuntu/Debian): `sudo apt install ./lymux_0.5.0_amd64.deb`. Adds lymux to your app menu with its icon.
-- **AppImage** (any distro): `chmod +x lymux-0.5.0-x86_64.AppImage && ./lymux-0.5.0-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
+- **.deb** (Ubuntu/Debian): `sudo apt install ./lymux_0.5.1_amd64.deb`. Adds lymux to your app menu with its icon.
+- **AppImage** (any distro): `chmod +x lymux-0.5.1-x86_64.AppImage && ./lymux-0.5.1-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
 
 ## Features
 
@@ -23,7 +23,7 @@ Download from [Releases](https://github.com/adlynfakhreyz/lymux/releases):
 - Split panes right/down, resize by dragging dividers
 - Drag a pane by its header onto another pane: drop on an edge to dock it there, or in the middle to swap
 - Layout, sizes and each pane's directory are saved and restored on relaunch
-- Adjustable background transparency (`Ctrl+Shift+[` / `Ctrl+Shift+]`, 50 to 100%), so desktop blur like Blur my Shell shows through
+- Translucent background, so desktop blur like Blur my Shell shows through
 - Font size zoom with `Ctrl+=` / `Ctrl+-` / `Ctrl+0` or Ctrl+scroll (a small indicator shows the size briefly)
 - Resizable sidebar (drag its right edge); close it to a thin rail, or switch to auto-hide so it slides out when the pointer reaches the left edge
 - Bundled JetBrains Mono + Nerd Font symbols, so powerlevel10k/starship prompts render out of the box
@@ -51,7 +51,6 @@ npm run test:e2e # drive the real window: drag, zoom, sidebar
 | Ctrl+Shift+N | New workspace |
 | Ctrl+PgUp / Ctrl+PgDn | Previous / next workspace |
 | Ctrl+Shift+B | Toggle sidebar |
-| Ctrl+Shift+[ / ] | Background opacity down / up |
 | Ctrl+= / Ctrl+- / Ctrl+0 | Zoom in / out / reset (also Ctrl+scroll) |
 | Double-click workspace | Rename |
 | Drag pane header | Move pane (edge = dock, middle = swap) |

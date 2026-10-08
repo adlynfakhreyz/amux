@@ -23,7 +23,7 @@ export const FONT_FAMILY_NAMES = ['JetBrains Mono', 'Symbols Nerd Font Mono']
 const fontFamily = [...FONT_FAMILY_NAMES.map((f) => `'${f}'`), 'monospace'].join(', ')
 
 const theme = {
-  // Transparent so the pane's CSS background (and its opacity setting) shows through.
+  // Transparent so the pane's CSS background (translucent) shows through.
   background: '#00000000',
   foreground: '#d7dae0',
   cursor: '#d7dae0',
