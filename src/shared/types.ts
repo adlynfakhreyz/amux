@@ -45,7 +45,7 @@ export interface SpawnOptions {
   rows: number
 }
 
-export interface LynmuxApi {
+export interface LymuxApi {
   homeDir: string
   pty: {
     spawn(id: string, opts: SpawnOptions): Promise<void>

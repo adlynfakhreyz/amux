@@ -15,7 +15,7 @@ import {
   splitPane
 } from './state/layout'
 
-const api = window.lynmux
+const api = window.lymux
 const META_POLL_MS = 2000
 const SAVE_DEBOUNCE_MS = 1000
 

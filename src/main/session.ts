@@ -3,11 +3,11 @@ import { dirname, join } from 'node:path'
 import { app } from 'electron'
 import type { Session } from '../shared/types'
 
-// ~/.config/lynmux/session.json
+// ~/.config/lymux/session.json
 const sessionPath = (): string => join(app.getPath('userData'), 'session.json')
 
-// The app was called amux before v0.4.0; its session lived in ~/.config/amux.
-const legacySessionPath = (): string => join(app.getPath('appData'), 'amux', 'session.json')
+// Earlier names of the app (newest first): lynmux in v0.4.0, amux before that. Their sessions lived in ~/.config/<name>.
+const LEGACY_NAMES = ['lynmux', 'amux']
 
 async function readSession(file: string): Promise<Session | null> {
   try {
@@ -18,11 +18,15 @@ async function readSession(file: string): Promise<Session | null> {
   }
 }
 
-/** Load the saved session, falling back once to the pre-rename amux session (it is saved to the new path on the next change). */
+/** Load the saved session, falling back once to a pre-rename session (it is saved to the new path on the next change). */
 export async function loadSession(): Promise<Session | null> {
   const current = await readSession(sessionPath())
-  if (current || process.env.LYNMUX_USER_DATA) return current
-  return readSession(legacySessionPath())
+  if (current || process.env.LYMUX_USER_DATA) return current
+  for (const name of LEGACY_NAMES) {
+    const legacy = await readSession(join(app.getPath('appData'), name, 'session.json'))
+    if (legacy) return legacy
+  }
+  return null
 }
 
 /** Atomic write: a crash mid-save never leaves a half-written session file. */

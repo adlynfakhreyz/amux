@@ -1,7 +1,7 @@
 // End-to-end test for background opacity. Run inside the app window via the *_EVAL dev hook.
 (async () => {
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
-  const api = window.lynmux
+  const api = window.lymux
   const ui = async () => {
     await sleep(1300) // session save is debounced by 1s
     return (await api.session.load()).ui ?? {}

@@ -1,21 +1,21 @@
-<p align="center"><img src="build/icon.png" width="96" alt="lynmux icon"></p>
+<p align="center"><img src="build/icon.png" width="96" alt="lymux icon"></p>
 
-# lynmux
+# lymux
 
-> Formerly **amux**; renamed in v0.4.0 because the name was taken. Your saved layout carries over automatically.
+> **lymux** is to Linux what wmux is to Windows and cmux is to macOS. Formerly *amux* and *lynmux*; your saved layout carries over automatically.
 
-A [wmux](https://github.com/kevmtt/wmux)/[cmux](https://cmux.com)-style terminal multiplexer for Linux: a workspace sidebar, draggable split panes, and session persistence. cmux is macOS-only and wmux is Windows-only; lynmux fills that gap on Linux.
+A [wmux](https://github.com/kevmtt/wmux)/[cmux](https://cmux.com)-style terminal multiplexer for Linux: a workspace sidebar, draggable split panes, and session persistence. cmux is macOS-only and wmux is Windows-only; lymux fills that gap on Linux.
 
-![lynmux screenshot](docs/screenshot.png)
+![lymux screenshot](docs/screenshot.png)
 
-> Early stage (v0.4). Expect rough edges.
+> Early stage (v0.5). Expect rough edges.
 
 ## Install
 
-Download from [Releases](https://github.com/adlynfakhreyz/lynmux/releases):
+Download from [Releases](https://github.com/adlynfakhreyz/lymux/releases):
 
-- **.deb** (Ubuntu/Debian): `sudo apt install ./lynmux_0.4.0_amd64.deb`. Adds lynmux to your app menu with its icon.
-- **AppImage** (any distro): `chmod +x lynmux-0.4.0-x86_64.AppImage && ./lynmux-0.4.0-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
+- **.deb** (Ubuntu/Debian): `sudo apt install ./lymux_0.5.0_amd64.deb`. Adds lymux to your app menu with its icon.
+- **AppImage** (any distro): `chmod +x lymux-0.5.0-x86_64.AppImage && ./lymux-0.5.0-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
 
 ## Features
 
@@ -23,6 +23,7 @@ Download from [Releases](https://github.com/adlynfakhreyz/lynmux/releases):
 - Split panes right/down, resize by dragging dividers
 - Drag a pane by its header onto another pane: drop on an edge to dock it there, or in the middle to swap
 - Layout, sizes and each pane's directory are saved and restored on relaunch
+- Adjustable background transparency (`Ctrl+Shift+[` / `Ctrl+Shift+]`, 50 to 100%), so desktop blur like Blur my Shell shows through
 - Font size zoom with `Ctrl+=` / `Ctrl+-` / `Ctrl+0` or Ctrl+scroll (a small indicator shows the size briefly)
 - Resizable sidebar (drag its right edge); close it to a thin rail, or switch to auto-hide so it slides out when the pointer reaches the left edge
 - Bundled JetBrains Mono + Nerd Font symbols, so powerlevel10k/starship prompts render out of the box
@@ -31,7 +32,7 @@ Download from [Releases](https://github.com/adlynfakhreyz/lynmux/releases):
 ## Build from source
 
 ```bash
-git clone https://github.com/adlynfakhreyz/lynmux.git && cd lynmux
+git clone https://github.com/adlynfakhreyz/lymux.git && cd lymux
 npm install      # also rebuilds node-pty for Electron
 npm run dev      # dev mode with hot reload
 npm run dist     # build AppImage + .deb into dist/
@@ -50,6 +51,7 @@ npm run test:e2e # drive the real window: drag, zoom, sidebar
 | Ctrl+Shift+N | New workspace |
 | Ctrl+PgUp / Ctrl+PgDn | Previous / next workspace |
 | Ctrl+Shift+B | Toggle sidebar |
+| Ctrl+Shift+[ / ] | Background opacity down / up |
 | Ctrl+= / Ctrl+- / Ctrl+0 | Zoom in / out / reset (also Ctrl+scroll) |
 | Double-click workspace | Rename |
 | Drag pane header | Move pane (edge = dock, middle = swap) |
@@ -59,7 +61,7 @@ npm run test:e2e # drive the real window: drag, zoom, sidebar
 ```
 main process (Node)                         renderer (React)
 ├─ PtyManager: one shell per pane id  ⇄ IPC ⇄ ├─ Sidebar: workspaces, cwd, git branch
-├─ session.ts: ~/.config/lynmux/session.json    ├─ SplitView: layout tree → resizable panels
+├─ session.ts: ~/.config/lymux/session.json    ├─ SplitView: layout tree → resizable panels
 └─ git.ts: branch per pane cwd                └─ TerminalPane → TerminalEngine (xterm.js today)
 ```
 
