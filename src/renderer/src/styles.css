@@ -133,46 +133,28 @@ body.resizing-sidebar {
   user-select: none;
 }
 
-/* Font size (zoom) control */
-.zoom-control {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 12px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: #b4b9c4;
-}
-
-.zoom-label {
-  flex: 1;
-}
-
-.zoom-button,
-.zoom-value {
-  height: 24px;
-  border: 1px solid #3b4256;
-  border-radius: 5px;
-  background: #1c2029;
-  color: var(--text);
-  font: inherit;
-  cursor: pointer;
-}
-
-.zoom-button {
-  width: 26px;
-  font-size: 15px;
-  line-height: 1;
-}
-
-.zoom-value {
-  min-width: 34px;
+/* Transient zoom indicator, bottom-right */
+.zoom-toast {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  z-index: 30;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(15, 17, 21, 0.85);
+  color: var(--text-dim);
   font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  pointer-events: none;
+  animation: toast-in 0.12s ease-out;
 }
 
-.zoom-button:hover,
-.zoom-value:hover {
-  border-color: var(--accent);
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
 }
 
 .workspace-list {

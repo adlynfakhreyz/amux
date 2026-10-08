@@ -14,18 +14,20 @@
   const out = {}
 
   // Zoom
-  const zoomButtons = document.querySelectorAll('.zoom-button')
-  zoomButtons[1].click()
-  zoomButtons[1].click()
-  out.zoomAfterTwoPlusClicks = (await ui()).fontSize
+  out.noZoomControlInSidebar = !document.querySelector('.zoom-control')
   key('Equal', { ctrlKey: true })
-  out.zoomAfterCtrlEquals = (await ui()).fontSize
+  await sleep(50)
+  out.toastShown = $('.zoom-toast')?.textContent
+  key('Equal', { ctrlKey: true })
+  out.zoomAfterTwoCtrlEquals = (await ui()).fontSize
+  out.toastGoneAfterDelay = !$('.zoom-toast')
+  key('Equal', { ctrlKey: true })
+  out.zoomAfterThirdCtrlEquals = (await ui()).fontSize
   key('Minus', { ctrlKey: true })
   key('Minus', { ctrlKey: true })
   out.zoomAfterTwoCtrlMinus = (await ui()).fontSize
   key('Digit0', { ctrlKey: true })
   out.zoomAfterReset = (await ui()).fontSize
-  out.zoomLabel = $('.zoom-value').textContent
 
   // Sidebar width: drag the resizer 100px right, then far left (clamped to the minimum)
   const startWidth = $('.sidebar').getBoundingClientRect().width

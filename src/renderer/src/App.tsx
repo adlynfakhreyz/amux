@@ -33,6 +33,8 @@ export function App(): React.JSX.Element | null {
   const [meta, setMeta] = useState<Record<string, PaneMeta>>({})
   const [draggingId, setDraggingId] = useState<string | null>(null)
   const [peek, setPeek] = useState(false)
+  const [zoomToast, setZoomToast] = useState(false)
+  const zoomToastTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
   const peekTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
   const sessionRef = useRef(session)
   sessionRef.current = session
@@ -82,6 +84,10 @@ export function App(): React.JSX.Element | null {
   useEffect(() => setFontSize(ui.fontSize), [ui.fontSize])
 
   const zoom = (delta: number | 'reset'): void => {
+    // Brief, unobtrusive size indicator instead of a permanent control.
+    clearTimeout(zoomToastTimer.current)
+    setZoomToast(true)
+    zoomToastTimer.current = setTimeout(() => setZoomToast(false), 1200)
     setSession((s) => {
       if (!s) return s
       const cur = { ...DEFAULT_UI, ...s.ui }
@@ -243,19 +249,18 @@ export function App(): React.JSX.Element | null {
           width={ui.sidebarWidth}
           mode={ui.sidebarMode}
           peek={peek}
-          fontSize={ui.fontSize}
           onSelect={(id) => setSession({ ...session, activeWorkspaceId: id })}
           onNew={() => void addWorkspace()}
           onRename={(id, name) => updateWorkspace(id, (w) => ({ ...w, name }))}
           onClose={closeWorkspace}
           onToggleMode={toggleSidebarMode}
           onCollapse={() => setUi({ sidebarOpen: false })}
-          onZoom={zoom}
           onResizeStart={startSidebarResize}
           onMouseEnter={() => ui.sidebarMode === 'hover' && showPeek()}
           onMouseLeave={() => ui.sidebarMode === 'hover' && !document.body.classList.contains('resizing-sidebar') && hidePeekSoon()}
         />
       )}
+      {zoomToast && <div className="zoom-toast">Font {ui.fontSize}</div>}
       <main className="workspace-view" key={active.id}>
         <SplitView
           node={active.root}

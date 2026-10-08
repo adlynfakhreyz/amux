@@ -21,7 +21,7 @@ Download from [Releases](https://github.com/adlynfakhreyz/amux/releases):
 - Split panes right/down, resize by dragging dividers
 - Drag a pane by its header onto another pane: drop on an edge to dock it there, or in the middle to swap
 - Layout, sizes and each pane's directory are saved and restored on relaunch
-- Font size zoom with `−`/`+` buttons, `Ctrl+=`/`Ctrl+-`/`Ctrl+0`, or Ctrl+scroll
+- Font size zoom with `Ctrl+=` / `Ctrl+-` / `Ctrl+0` or Ctrl+scroll (a small indicator shows the size briefly)
 - Resizable sidebar (drag its right edge); close it to a thin rail, or switch to auto-hide so it slides out when the pointer reaches the left edge
 - Bundled JetBrains Mono + Nerd Font symbols, so powerlevel10k/starship prompts render out of the box
 - GPU (WebGL) rendering with pixel-aligned box and powerline glyphs

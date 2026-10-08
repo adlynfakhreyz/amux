@@ -10,14 +10,12 @@ interface Props {
   mode: SidebarMode
   /** Hover mode: whether the sidebar is currently slid out. */
   peek: boolean
-  fontSize: number
   onSelect: (id: string) => void
   onNew: () => void
   onRename: (id: string, name: string) => void
   onClose: (id: string) => void
   onToggleMode: () => void
   onCollapse: () => void
-  onZoom: (delta: number | 'reset') => void
   onResizeStart: (e: React.MouseEvent) => void
   onMouseEnter: () => void
   onMouseLeave: () => void
@@ -51,7 +49,7 @@ const CollapseIcon = (): React.JSX.Element => (
 )
 
 export function Sidebar(props: Props): React.JSX.Element {
-  const { workspaces, activeId, meta, homeDir, width, mode, peek, fontSize } = props
+  const { workspaces, activeId, meta, homeDir, width, mode, peek } = props
   const [editing, setEditing] = useState<string | null>(null)
   const floating = mode === 'hover'
 
@@ -125,18 +123,6 @@ export function Sidebar(props: Props): React.JSX.Element {
       <button className="workspace-new" onClick={props.onNew}>
         + New workspace
       </button>
-      <div className="zoom-control">
-        <span className="zoom-label">Font size</span>
-        <button className="zoom-button" title="Zoom out (Ctrl+−)" onClick={() => props.onZoom(-1)}>
-          −
-        </button>
-        <button className="zoom-value" title="Reset (Ctrl+0)" onClick={() => props.onZoom('reset')}>
-          {fontSize}
-        </button>
-        <button className="zoom-button" title="Zoom in (Ctrl++)" onClick={() => props.onZoom(1)}>
-          +
-        </button>
-      </div>
       <div className="shortcuts">
         <div className="shortcuts-title">Shortcuts</div>
         {SHORTCUTS.map(([keys, label]) => (
