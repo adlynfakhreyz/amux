@@ -6,14 +6,14 @@ A [wmux](https://github.com/kevmtt/wmux)/[cmux](https://cmux.com)-style terminal
 
 ![amux screenshot](docs/screenshot.png)
 
-> Early stage (v0.2). Expect rough edges.
+> Early stage (v0.3). Expect rough edges.
 
 ## Install
 
 Download from [Releases](https://github.com/adlynfakhreyz/amux/releases):
 
-- **.deb** (Ubuntu/Debian): `sudo apt install ./amux_0.2.0_amd64.deb`. Adds amux to your app menu with its icon.
-- **AppImage** (any distro): `chmod +x amux-0.2.0-x86_64.AppImage && ./amux-0.2.0-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
+- **.deb** (Ubuntu/Debian): `sudo apt install ./amux_0.3.0_amd64.deb`. Adds amux to your app menu with its icon.
+- **AppImage** (any distro): `chmod +x amux-0.3.0-x86_64.AppImage && ./amux-0.3.0-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
 
 ## Features
 
@@ -21,6 +21,8 @@ Download from [Releases](https://github.com/adlynfakhreyz/amux/releases):
 - Split panes right/down, resize by dragging dividers
 - Drag a pane by its header onto another pane: drop on an edge to dock it there, or in the middle to swap
 - Layout, sizes and each pane's directory are saved and restored on relaunch
+- Font size zoom with `−`/`+` buttons, `Ctrl+=`/`Ctrl+-`/`Ctrl+0`, or Ctrl+scroll
+- Resizable sidebar (drag its right edge); close it to a thin rail, or switch to auto-hide so it slides out when the pointer reaches the left edge
 - Bundled JetBrains Mono + Nerd Font symbols, so powerlevel10k/starship prompts render out of the box
 - GPU (WebGL) rendering with pixel-aligned box and powerline glyphs
 
@@ -31,6 +33,7 @@ git clone https://github.com/adlynfakhreyz/amux.git && cd amux
 npm install      # also rebuilds node-pty for Electron
 npm run dev      # dev mode with hot reload
 npm run dist     # build AppImage + .deb into dist/
+npm run test:e2e # drive the real window: drag, zoom, sidebar
 ```
 
 `npm run dev` and `npm start` pass `--no-sandbox` because Ubuntu 24.04's AppArmor blocks Chromium's sandbox for unpackaged Electron. The .deb installs a proper setuid sandbox; the AppImage opts out of the sandbox automatically for the same reason.
@@ -44,6 +47,8 @@ npm run dist     # build AppImage + .deb into dist/
 | Ctrl+Shift+W | Close active pane |
 | Ctrl+Shift+N | New workspace |
 | Ctrl+PgUp / Ctrl+PgDn | Previous / next workspace |
+| Ctrl+Shift+B | Toggle sidebar |
+| Ctrl+= / Ctrl+- / Ctrl+0 | Zoom in / out / reset (also Ctrl+scroll) |
 | Double-click workspace | Rename |
 | Drag pane header | Move pane (edge = dock, middle = swap) |
 

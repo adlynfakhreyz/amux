@@ -1,6 +1,6 @@
 {
   "name": "amux",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A wmux/cmux-style terminal multiplexer for Linux: workspace sidebar, draggable split panes, session persistence.",
   "keywords": [
     "terminal",
@@ -33,7 +33,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "postinstall": "electron-rebuild -f -w node-pty",
     "dist": "electron-vite build && electron-builder --linux",
-    "test:e2e": "electron-vite build && AMUX_USER_DATA=$(mktemp -d) AMUX_EVAL=tests/drag-e2e.js electron . --no-sandbox"
+    "test:e2e": "electron-vite build && for t in tests/*-e2e.js; do AMUX_USER_DATA=$(mktemp -d) AMUX_EVAL=$t electron . --no-sandbox 2>/dev/null | grep AMUX_EVAL; done"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.3.0",

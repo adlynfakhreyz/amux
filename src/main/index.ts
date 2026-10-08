@@ -1,7 +1,7 @@
 import { join } from 'node:path'
 import { homedir } from 'node:os'
 import { readFile, writeFile } from 'node:fs/promises'
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import { PtyManager } from './pty'
 import { loadSession, saveSession } from './session'
 import { gitBranch } from './git'
@@ -89,7 +89,11 @@ ipcMain.handle('meta:get', async (_e, ids: string[]) => {
   return out
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  // No app menu: its default zoom accelerators (Ctrl+=/-) would zoom the whole UI instead of the terminal font.
+  Menu.setApplicationMenu(null)
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   // v1: shells die with the app. A background daemon that keeps them alive is on the roadmap.

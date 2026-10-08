@@ -13,6 +13,7 @@ export interface TerminalEngine {
   onInput(cb: (data: string) => void): void
   /** Fit to the element's current size; returns the new grid size. */
   fit(): { cols: number; rows: number }
+  setFontSize(size: number): void
   focus(): void
   dispose(): void
 }
@@ -39,12 +40,12 @@ function loadWebgl(term: Terminal): void {
   }
 }
 
-export function createXtermEngine(): TerminalEngine {
+export function createXtermEngine(fontSize = 13): TerminalEngine {
   const element = document.createElement('div')
   element.className = 'terminal-host'
   const term = new Terminal({
     fontFamily,
-    fontSize: 13,
+    fontSize,
     cursorBlink: true,
     scrollback: 10000,
     allowProposedApi: true,
@@ -72,6 +73,9 @@ export function createXtermEngine(): TerminalEngine {
       }
       if (opened && element.clientWidth > 0 && element.clientHeight > 0) fitAddon.fit()
       return { cols: term.cols, rows: term.rows }
+    },
+    setFontSize: (size) => {
+      term.options.fontSize = size
     },
     focus: () => term.focus(),
     dispose: () => {

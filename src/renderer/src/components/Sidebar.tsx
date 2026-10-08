@@ -1,15 +1,26 @@
 import { useState } from 'react'
-import type { PaneMeta, Workspace } from '../../../shared/types'
+import type { PaneMeta, SidebarMode, Workspace } from '../../../shared/types'
 
 interface Props {
   workspaces: Workspace[]
   activeId: string
   meta: Record<string, PaneMeta>
   homeDir: string
+  width: number
+  mode: SidebarMode
+  /** Hover mode: whether the sidebar is currently slid out. */
+  peek: boolean
+  fontSize: number
   onSelect: (id: string) => void
   onNew: () => void
   onRename: (id: string, name: string) => void
   onClose: (id: string) => void
+  onToggleMode: () => void
+  onCollapse: () => void
+  onZoom: (delta: number | 'reset') => void
+  onResizeStart: (e: React.MouseEvent) => void
+  onMouseEnter: () => void
+  onMouseLeave: () => void
 }
 
 // Keys shown as keycaps in the sidebar footer.
@@ -18,18 +29,54 @@ const SHORTCUTS: [string[], string][] = [
   [['Ctrl+Shift', 'E'], 'Split down'],
   [['Ctrl+Shift', 'W'], 'Close pane'],
   [['Ctrl+Shift', 'N'], 'New workspace'],
-  [['Ctrl', 'PgUp/Dn'], 'Switch workspace']
+  [['Ctrl', 'PgUp/Dn'], 'Switch workspace'],
+  [['Ctrl+Shift', 'B'], 'Toggle sidebar'],
+  [['Ctrl', '+ / −'], 'Zoom']
 ]
 
 const shortPath = (path: string | null | undefined, home: string): string =>
   !path ? '' : path === home ? '~' : path.startsWith(home + '/') ? '~' + path.slice(home.length) : path
 
-export function Sidebar({ workspaces, activeId, meta, homeDir, onSelect, onNew, onRename, onClose }: Props): React.JSX.Element {
+const PinIcon = ({ pinned }: { pinned: boolean }): React.JSX.Element => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill={pinned ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+    <path d="M9 4h6l-1 6 4 4H6l4-4-1-6z" strokeLinejoin="round" />
+    <path d="M12 14v7" strokeLinecap="round" />
+  </svg>
+)
+
+const CollapseIcon = (): React.JSX.Element => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 6l-6 6 6 6M19 6l-6 6 6 6" />
+  </svg>
+)
+
+export function Sidebar(props: Props): React.JSX.Element {
+  const { workspaces, activeId, meta, homeDir, width, mode, peek, fontSize } = props
   const [editing, setEditing] = useState<string | null>(null)
+  const floating = mode === 'hover'
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-title">amux</div>
+    <aside
+      className={`sidebar${floating ? ' sidebar-floating' : ''}${floating && peek ? ' sidebar-peek' : ''}`}
+      style={{ width }}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
+    >
+      <div className="sidebar-header">
+        <span className="sidebar-title">amux</span>
+        <button
+          className="icon-button"
+          title={floating ? 'Pin sidebar (always visible)' : 'Auto-hide: open on hover at the left edge'}
+          onClick={props.onToggleMode}
+        >
+          <PinIcon pinned={!floating} />
+        </button>
+        {!floating && (
+          <button className="icon-button" title="Close sidebar (Ctrl+Shift+B)" onClick={props.onCollapse}>
+            <CollapseIcon />
+          </button>
+        )}
+      </div>
       <ul className="workspace-list">
         {workspaces.map((ws) => {
           const m = meta[ws.activePaneId]
@@ -37,7 +84,7 @@ export function Sidebar({ workspaces, activeId, meta, homeDir, onSelect, onNew, 
             <li
               key={ws.id}
               className={`workspace${ws.id === activeId ? ' workspace-active' : ''}`}
-              onClick={() => onSelect(ws.id)}
+              onClick={() => props.onSelect(ws.id)}
               onDoubleClick={() => setEditing(ws.id)}
             >
               {editing === ws.id ? (
@@ -46,7 +93,7 @@ export function Sidebar({ workspaces, activeId, meta, homeDir, onSelect, onNew, 
                   autoFocus
                   defaultValue={ws.name}
                   onBlur={(e) => {
-                    onRename(ws.id, e.currentTarget.value.trim() || ws.name)
+                    props.onRename(ws.id, e.currentTarget.value.trim() || ws.name)
                     setEditing(null)
                   }}
                   onKeyDown={(e) => {
@@ -66,7 +113,7 @@ export function Sidebar({ workspaces, activeId, meta, homeDir, onSelect, onNew, 
                 title="Close workspace"
                 onClick={(e) => {
                   e.stopPropagation()
-                  onClose(ws.id)
+                  props.onClose(ws.id)
                 }}
               >
                 ×
@@ -75,9 +122,21 @@ export function Sidebar({ workspaces, activeId, meta, homeDir, onSelect, onNew, 
           )
         })}
       </ul>
-      <button className="workspace-new" onClick={onNew}>
+      <button className="workspace-new" onClick={props.onNew}>
         + New workspace
       </button>
+      <div className="zoom-control">
+        <span className="zoom-label">Font size</span>
+        <button className="zoom-button" title="Zoom out (Ctrl+−)" onClick={() => props.onZoom(-1)}>
+          −
+        </button>
+        <button className="zoom-value" title="Reset (Ctrl+0)" onClick={() => props.onZoom('reset')}>
+          {fontSize}
+        </button>
+        <button className="zoom-button" title="Zoom in (Ctrl++)" onClick={() => props.onZoom(1)}>
+          +
+        </button>
+      </div>
       <div className="shortcuts">
         <div className="shortcuts-title">Shortcuts</div>
         {SHORTCUTS.map(([keys, label]) => (
@@ -92,6 +151,7 @@ export function Sidebar({ workspaces, activeId, meta, homeDir, onSelect, onNew, 
         ))}
         <div className="shortcut-hint">Drag a pane's header to move it</div>
       </div>
+      <div className="sidebar-resizer" title="Drag to resize" onMouseDown={props.onResizeStart} />
     </aside>
   )
 }

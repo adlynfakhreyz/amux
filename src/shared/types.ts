@@ -14,10 +14,22 @@ export interface Workspace {
   activePaneId: string
 }
 
+/** `pinned`: sidebar takes space and is opened/closed by hand. `hover`: hidden, slides out over the panes when the pointer reaches the left edge. */
+export type SidebarMode = 'pinned' | 'hover'
+
+export interface UiSettings {
+  fontSize: number
+  sidebarWidth: number
+  sidebarMode: SidebarMode
+  sidebarOpen: boolean
+}
+
 export interface Session {
   version: 1
   workspaces: Workspace[]
   activeWorkspaceId: string
+  /** Optional so sessions saved by older versions still load. */
+  ui?: Partial<UiSettings>
 }
 
 export interface PaneMeta {
