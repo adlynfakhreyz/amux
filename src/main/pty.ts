@@ -19,7 +19,7 @@ export class PtyManager {
       cols: opts.cols,
       rows: opts.rows,
       cwd,
-      env: { ...process.env, TERM: 'xterm-256color', COLORTERM: 'truecolor', TERM_PROGRAM: 'amux' } as Record<string, string>
+      env: { ...process.env, TERM: 'xterm-256color', COLORTERM: 'truecolor', TERM_PROGRAM: 'lynmux' } as Record<string, string>
     })
     p.onData((data) => this.target()?.send('pty:data', id, data))
     p.onExit(({ exitCode }) => {

@@ -1,5 +1,5 @@
-appId: dev.adlynfakhreyz.amux
-productName: amux
+appId: dev.adlynfakhreyz.lynmux
+productName: lynmux
 copyright: Copyright © 2026 adlynfakhreyz
 directories:
   buildResources: build
@@ -21,7 +21,7 @@ linux:
   description: A wmux/cmux-style terminal multiplexer for Linux with a workspace sidebar, draggable split panes and session persistence.
   desktop:
     entry:
-      Name: amux
+      Name: lynmux
       Comment: Terminal multiplexer with a workspace sidebar
       Keywords: terminal;multiplexer;shell;tmux;
 appImage:

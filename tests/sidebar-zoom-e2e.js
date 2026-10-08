@@ -1,9 +1,9 @@
-// End-to-end test for zoom, sidebar resizing and sidebar modes. Run inside the amux window via AMUX_EVAL.
+// End-to-end test for zoom, sidebar resizing and sidebar modes. Run inside the lynmux window via LYNMUX_EVAL.
 (async () => {
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
   const ui = async () => {
     await sleep(1300) // session save is debounced by 1s
-    return (await window.amux.session.load()).ui ?? {}
+    return (await window.lynmux.session.load()).ui ?? {}
   }
   const key = (code, mods = {}) =>
     window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code, bubbles: true, cancelable: true, ...mods }))

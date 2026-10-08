@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { DropEdge } from '../state/layout'
 import { ensureSpawned, getEngine } from '../terminal/registry'
 
-export const PANE_DRAG_TYPE = 'application/x-amux-pane'
+export const PANE_DRAG_TYPE = 'application/x-lynmux-pane'
 
 interface Props {
   id: string

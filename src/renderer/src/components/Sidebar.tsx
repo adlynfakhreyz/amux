@@ -61,7 +61,7 @@ export function Sidebar(props: Props): React.JSX.Element {
       onMouseLeave={props.onMouseLeave}
     >
       <div className="sidebar-header">
-        <span className="sidebar-title">amux</span>
+        <span className="sidebar-title">lynmux</span>
         <button
           className="icon-button"
           title={floating ? 'Pin sidebar (always visible)' : 'Auto-hide: open on hover at the left edge'}

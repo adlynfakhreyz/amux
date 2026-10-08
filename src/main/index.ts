@@ -12,8 +12,8 @@ import icon from '../../resources/icon.png?asset'
 // The .deb sets chrome-sandbox up properly, so only the AppImage opts out.
 if (process.platform === 'linux' && process.env.APPIMAGE) app.commandLine.appendSwitch('no-sandbox')
 
-// Dev/test aid: keep session state in a separate directory so test runs never touch the real ~/.config/amux.
-if (process.env.AMUX_USER_DATA) app.setPath('userData', process.env.AMUX_USER_DATA)
+// Dev/test aid: keep session state in a separate directory so test runs never touch the real ~/.config/lynmux.
+if (process.env.LYNMUX_USER_DATA) app.setPath('userData', process.env.LYNMUX_USER_DATA)
 
 let win: BrowserWindow | null = null
 const ptys = new PtyManager(() => (win && !win.isDestroyed() ? win.webContents : null))
@@ -22,13 +22,13 @@ function createWindow(): void {
   win = new BrowserWindow({
     width: 1280,
     height: 800,
-    title: 'amux',
+    title: 'lynmux',
     backgroundColor: '#14161b',
     autoHideMenuBar: true,
     icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      additionalArguments: [`--amux-home=${homedir()}`],
+      additionalArguments: [`--lynmux-home=${homedir()}`],
       contextIsolation: true,
       nodeIntegration: false
     }
@@ -37,33 +37,33 @@ function createWindow(): void {
   if (process.env.ELECTRON_RENDERER_URL) win.loadURL(process.env.ELECTRON_RENDERER_URL)
   else win.loadFile(join(__dirname, '../renderer/index.html'))
 
-  // Dev aid: AMUX_SCREENSHOT=/path.png captures the window once the shells have drawn, then quits.
-  const shot = process.env.AMUX_SCREENSHOT
+  // Dev aid: LYNMUX_SCREENSHOT=/path.png captures the window once the shells have drawn, then quits.
+  const shot = process.env.LYNMUX_SCREENSHOT
   if (shot) {
     win.webContents.once('did-finish-load', () => {
       setTimeout(async () => {
         const image = await win?.webContents.capturePage()
         if (image) await writeFile(shot, image.toPNG())
         app.quit()
-      }, Number(process.env.AMUX_SCREENSHOT_DELAY ?? 5000))
+      }, Number(process.env.LYNMUX_SCREENSHOT_DELAY ?? 5000))
     })
   }
 
-  // Dev aid for end-to-end checks: AMUX_EVAL=/path.js runs that script in the renderer once loaded,
+  // Dev aid for end-to-end checks: LYNMUX_EVAL=/path.js runs that script in the renderer once loaded,
   // prints its (awaited) result as JSON to stdout, then quits.
-  const evalFile = process.env.AMUX_EVAL
+  const evalFile = process.env.LYNMUX_EVAL
   if (evalFile) {
     win.webContents.once('did-finish-load', () => {
       setTimeout(async () => {
         try {
           const code = await readFile(evalFile, 'utf8')
           const result = await win?.webContents.executeJavaScript(code)
-          process.stdout.write(`AMUX_EVAL_RESULT ${JSON.stringify(result)}\n`)
+          process.stdout.write(`LYNMUX_EVAL_RESULT ${JSON.stringify(result)}\n`)
         } catch (err) {
-          process.stdout.write(`AMUX_EVAL_ERROR ${String(err)}\n`)
+          process.stdout.write(`LYNMUX_EVAL_ERROR ${String(err)}\n`)
         }
         app.quit()
-      }, Number(process.env.AMUX_EVAL_DELAY ?? 4000))
+      }, Number(process.env.LYNMUX_EVAL_DELAY ?? 4000))
     })
   }
 

@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import type { AmuxApi } from '../shared/types'
+import type { LynmuxApi } from '../shared/types'
 
 function subscribe<T extends unknown[]>(channel: string, cb: (...args: T) => void): () => void {
   const listener = (_e: Electron.IpcRendererEvent, ...args: unknown[]): void => cb(...(args as T))
@@ -8,10 +8,10 @@ function subscribe<T extends unknown[]>(channel: string, cb: (...args: T) => voi
 }
 
 // The main process passes the home directory as a launch argument (the sandboxed preload has no node:os).
-const homeArg = process.argv.find((a) => a.startsWith('--amux-home='))
+const homeArg = process.argv.find((a) => a.startsWith('--lynmux-home='))
 
-const api: AmuxApi = {
-  homeDir: homeArg ? homeArg.slice('--amux-home='.length) : '/',
+const api: LynmuxApi = {
+  homeDir: homeArg ? homeArg.slice('--lynmux-home='.length) : '/',
   pty: {
     spawn: (id, opts) => ipcRenderer.invoke('pty:spawn', id, opts),
     write: (id, data) => ipcRenderer.send('pty:write', id, data),
@@ -27,4 +27,4 @@ const api: AmuxApi = {
   meta: (ids) => ipcRenderer.invoke('meta:get', ids)
 }
 
-contextBridge.exposeInMainWorld('amux', api)
+contextBridge.exposeInMainWorld('lynmux', api)

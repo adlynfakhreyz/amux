@@ -1,10 +1,10 @@
-// End-to-end drag test, run inside the amux window via AMUX_EVAL.
+// End-to-end drag test, run inside the lynmux window via LYNMUX_EVAL.
 (async () => {
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
   const shape = (n) => (n.type === 'pane' ? n.id : `${n.dir}(${n.children.map(shape).join(',')})`)
   const tree = async () => {
     await sleep(1600) // session save is debounced by 1s
-    const s = await window.amux.session.load()
+    const s = await window.lynmux.session.load()
     return s.workspaces.find((w) => w.id === s.activeWorkspaceId).root
   }
   const paneIds = (n) => (n.type === 'pane' ? [n.id] : n.children.flatMap(paneIds))

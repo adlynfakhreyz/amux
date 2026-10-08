@@ -1,6 +1,6 @@
 # Third-party notices
 
-amux bundles the following fonts. Their licenses are reproduced in full below.
+lynmux bundles the following fonts. Their licenses are reproduced in full below.
 
 ## JetBrains Mono (via @fontsource/jetbrains-mono)
 

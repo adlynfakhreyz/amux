@@ -1,8 +1,8 @@
-import type { AmuxApi } from '../shared/types'
+import type { LynmuxApi } from '../shared/types'
 
 declare global {
   interface Window {
-    amux: AmuxApi
+    lynmux: LynmuxApi
   }
 }
 

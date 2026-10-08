@@ -1,19 +1,21 @@
-<p align="center"><img src="build/icon.png" width="96" alt="amux icon"></p>
+<p align="center"><img src="build/icon.png" width="96" alt="lynmux icon"></p>
 
-# amux
+# lynmux
 
-A [wmux](https://github.com/kevmtt/wmux)/[cmux](https://cmux.com)-style terminal multiplexer for Linux: a workspace sidebar, draggable split panes, and session persistence. cmux is macOS-only and wmux is Windows-only; amux fills that gap on Linux.
+> Formerly **amux**; renamed in v0.4.0 because the name was taken. Your saved layout carries over automatically.
 
-![amux screenshot](docs/screenshot.png)
+A [wmux](https://github.com/kevmtt/wmux)/[cmux](https://cmux.com)-style terminal multiplexer for Linux: a workspace sidebar, draggable split panes, and session persistence. cmux is macOS-only and wmux is Windows-only; lynmux fills that gap on Linux.
 
-> Early stage (v0.3). Expect rough edges.
+![lynmux screenshot](docs/screenshot.png)
+
+> Early stage (v0.4). Expect rough edges.
 
 ## Install
 
-Download from [Releases](https://github.com/adlynfakhreyz/amux/releases):
+Download from [Releases](https://github.com/adlynfakhreyz/lynmux/releases):
 
-- **.deb** (Ubuntu/Debian): `sudo apt install ./amux_0.3.0_amd64.deb`. Adds amux to your app menu with its icon.
-- **AppImage** (any distro): `chmod +x amux-0.3.0-x86_64.AppImage && ./amux-0.3.0-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
+- **.deb** (Ubuntu/Debian): `sudo apt install ./lynmux_0.4.0_amd64.deb`. Adds lynmux to your app menu with its icon.
+- **AppImage** (any distro): `chmod +x lynmux-0.4.0-x86_64.AppImage && ./lynmux-0.4.0-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
 
 ## Features
 
@@ -29,7 +31,7 @@ Download from [Releases](https://github.com/adlynfakhreyz/amux/releases):
 ## Build from source
 
 ```bash
-git clone https://github.com/adlynfakhreyz/amux.git && cd amux
+git clone https://github.com/adlynfakhreyz/lynmux.git && cd lynmux
 npm install      # also rebuilds node-pty for Electron
 npm run dev      # dev mode with hot reload
 npm run dist     # build AppImage + .deb into dist/
@@ -57,7 +59,7 @@ npm run test:e2e # drive the real window: drag, zoom, sidebar
 ```
 main process (Node)                         renderer (React)
 ├─ PtyManager: one shell per pane id  ⇄ IPC ⇄ ├─ Sidebar: workspaces, cwd, git branch
-├─ session.ts: ~/.config/amux/session.json    ├─ SplitView: layout tree → resizable panels
+├─ session.ts: ~/.config/lynmux/session.json    ├─ SplitView: layout tree → resizable panels
 └─ git.ts: branch per pane cwd                └─ TerminalPane → TerminalEngine (xterm.js today)
 ```
 
