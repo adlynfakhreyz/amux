@@ -1,6 +1,6 @@
 import { join } from 'node:path'
 import { homedir } from 'node:os'
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { PtyManager } from './pty'
 import { loadSession, saveSession } from './session'
@@ -11,6 +11,9 @@ import icon from '../../resources/icon.png?asset'
 // AppImages cannot ship a setuid chrome-sandbox, and Ubuntu 24.04+ blocks the namespace sandbox for them.
 // The .deb sets chrome-sandbox up properly, so only the AppImage opts out.
 if (process.platform === 'linux' && process.env.APPIMAGE) app.commandLine.appendSwitch('no-sandbox')
+
+// Dev/test aid: keep session state in a separate directory so test runs never touch the real ~/.config/amux.
+if (process.env.AMUX_USER_DATA) app.setPath('userData', process.env.AMUX_USER_DATA)
 
 let win: BrowserWindow | null = null
 const ptys = new PtyManager(() => (win && !win.isDestroyed() ? win.webContents : null))
@@ -43,6 +46,24 @@ function createWindow(): void {
         if (image) await writeFile(shot, image.toPNG())
         app.quit()
       }, Number(process.env.AMUX_SCREENSHOT_DELAY ?? 5000))
+    })
+  }
+
+  // Dev aid for end-to-end checks: AMUX_EVAL=/path.js runs that script in the renderer once loaded,
+  // prints its (awaited) result as JSON to stdout, then quits.
+  const evalFile = process.env.AMUX_EVAL
+  if (evalFile) {
+    win.webContents.once('did-finish-load', () => {
+      setTimeout(async () => {
+        try {
+          const code = await readFile(evalFile, 'utf8')
+          const result = await win?.webContents.executeJavaScript(code)
+          process.stdout.write(`AMUX_EVAL_RESULT ${JSON.stringify(result)}\n`)
+        } catch (err) {
+          process.stdout.write(`AMUX_EVAL_ERROR ${String(err)}\n`)
+        }
+        app.quit()
+      }, Number(process.env.AMUX_EVAL_DELAY ?? 4000))
     })
   }
 

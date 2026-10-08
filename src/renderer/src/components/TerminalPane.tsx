@@ -74,7 +74,11 @@ export function TerminalPane(props: Props): React.JSX.Element {
   const isDropTarget = draggingId !== null && draggingId !== id
 
   return (
-    <div className={`pane${active ? ' pane-active' : ''}${draggingId === id ? ' pane-dragging' : ''}`} onMouseDown={onFocus}>
+    <div
+      className={`pane${active ? ' pane-active' : ''}${draggingId === id ? ' pane-dragging' : ''}`}
+      data-pane-id={id}
+      onMouseDown={onFocus}
+    >
       <div
         className="pane-header"
         draggable

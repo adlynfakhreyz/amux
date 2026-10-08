@@ -32,7 +32,8 @@
     "start": "electron-vite preview -- --no-sandbox",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "postinstall": "electron-rebuild -f -w node-pty",
-    "dist": "electron-vite build && electron-builder --linux"
+    "dist": "electron-vite build && electron-builder --linux",
+    "test:e2e": "electron-vite build && AMUX_USER_DATA=$(mktemp -d) AMUX_EVAL=tests/drag-e2e.js electron . --no-sandbox"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.3.0",
