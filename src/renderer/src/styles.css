@@ -1,0 +1,184 @@
+:root {
+  --bg: #14161b;
+  --bg-sidebar: #0f1115;
+  --bg-hover: #1c1f26;
+  --bg-active: #232733;
+  --border: #262a33;
+  --accent: #7aa2f7;
+  --text: #d7dae0;
+  --text-dim: #7d8390;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.app {
+  display: flex;
+  height: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+}
+
+.sidebar-title {
+  padding: 12px 14px 8px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.workspace-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 6px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.workspace {
+  position: relative;
+  padding: 8px 26px 8px 10px;
+  margin-bottom: 2px;
+  border-radius: 6px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+
+.workspace:hover {
+  background: var(--bg-hover);
+}
+
+.workspace-active {
+  background: var(--bg-active);
+  border-left-color: var(--accent);
+}
+
+.workspace-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.workspace-meta {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.workspace-branch {
+  color: var(--accent);
+}
+
+.workspace-rename {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font: inherit;
+}
+
+.workspace-close {
+  position: absolute;
+  top: 6px;
+  right: 4px;
+  border: none;
+  background: none;
+  color: var(--text-dim);
+  font-size: 15px;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.workspace:hover .workspace-close {
+  visibility: visible;
+}
+
+.workspace-new {
+  margin: 6px;
+  padding: 8px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  background: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font: inherit;
+}
+
+.workspace-new:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.shortcuts {
+  padding: 8px 14px 12px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+}
+
+/* Panes */
+.workspace-view {
+  flex: 1;
+  min-width: 0;
+}
+
+.pane {
+  height: 100%;
+  width: 100%;
+  padding: 4px 0 0 6px;
+  border: 1px solid transparent;
+}
+
+.pane-active {
+  border-color: var(--border);
+}
+
+.terminal-host {
+  height: 100%;
+  width: 100%;
+}
+
+.resize-handle {
+  background: var(--border);
+  transition: background 0.15s;
+}
+
+.resize-handle:hover,
+.resize-handle[data-resize-handle-active] {
+  background: var(--accent);
+}
+
+.resize-row {
+  width: 3px;
+}
+
+.resize-column {
+  height: 3px;
+}

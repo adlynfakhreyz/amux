@@ -1,0 +1,11 @@
+/* Bundled fonts, matching Ghostty's defaults: JetBrains Mono for text, Nerd Font symbols for prompt icons (p10k, starship). */
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/400-italic.css';
+@import '@fontsource/jetbrains-mono/700.css';
+
+@font-face {
+  font-family: 'Symbols Nerd Font Mono';
+  src: url('./assets/fonts/SymbolsNerdFontMono-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}

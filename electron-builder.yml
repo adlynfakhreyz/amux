@@ -1,0 +1,33 @@
+appId: dev.adlynfakhreyz.amux
+productName: amux
+copyright: Copyright © 2026 adlynfakhreyz
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**
+  - resources/**
+  - package.json
+asarUnpack:
+  - resources/**
+linux:
+  target:
+    - AppImage
+    - deb
+  category: System;TerminalEmulator
+  icon: build/icons
+  syncDesktopName: true
+  synopsis: Terminal multiplexer with a workspace sidebar, split panes and session persistence
+  description: A wmux/cmux-style terminal multiplexer for Linux with a workspace sidebar, draggable split panes and session persistence.
+  desktop:
+    entry:
+      Name: amux
+      Comment: Terminal multiplexer with a workspace sidebar
+      Keywords: terminal;multiplexer;shell;tmux;
+appImage:
+  artifactName: ${productName}-${version}-${arch}.${ext}
+deb:
+  artifactName: ${productName}_${version}_${arch}.${ext}
+  maintainer: adlynfakhreyz
+npmRebuild: true
+publish: null

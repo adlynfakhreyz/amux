@@ -1,0 +1,64 @@
+{
+  "name": "amux",
+  "version": "0.1.0",
+  "description": "A wmux/cmux-style terminal multiplexer for Linux: workspace sidebar, draggable split panes, session persistence.",
+  "keywords": [
+    "terminal",
+    "multiplexer",
+    "electron",
+    "xterm",
+    "linux",
+    "claude-code"
+  ],
+  "homepage": "https://github.com/adlynfakhreyz/amux",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adlynfakhreyz/amux.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adlynfakhreyz/amux/issues"
+  },
+  "author": {
+    "name": "adlynfakhreyz",
+    "email": "139999814+adlynfakhreyz@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "desktopName": "amux.desktop",
+  "main": "./out/main/index.js",
+  "private": true,
+  "scripts": {
+    "dev": "electron-vite dev -- --no-sandbox",
+    "build": "electron-vite build",
+    "start": "electron-vite preview -- --no-sandbox",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "postinstall": "electron-rebuild -f -w node-pty",
+    "dist": "electron-vite build && electron-builder --linux"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/addon-webgl": "^0.19.0",
+    "@xterm/xterm": "^6.0.0",
+    "node-pty": "^1.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-resizable-panels": "^2.1.9"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.2.1",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^7.3.7"
+  },
+  "allowScripts": {
+    "node-pty@1.1.0": true,
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.2": true
+  }
+}
