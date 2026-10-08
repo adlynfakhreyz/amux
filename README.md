@@ -6,19 +6,20 @@ A [wmux](https://github.com/kevmtt/wmux)/[cmux](https://cmux.com)-style terminal
 
 ![amux screenshot](docs/screenshot.png)
 
-> Early stage (v0.1). Expect rough edges.
+> Early stage (v0.2). Expect rough edges.
 
 ## Install
 
 Download from [Releases](https://github.com/adlynfakhreyz/amux/releases):
 
-- **.deb** (Ubuntu/Debian): `sudo apt install ./amux_0.1.0_amd64.deb`. Adds amux to your app menu with its icon.
-- **AppImage** (any distro): `chmod +x amux-0.1.0-x86_64.AppImage && ./amux-0.1.0-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
+- **.deb** (Ubuntu/Debian): `sudo apt install ./amux_0.2.0_amd64.deb`. Adds amux to your app menu with its icon.
+- **AppImage** (any distro): `chmod +x amux-0.2.0-x86_64.AppImage && ./amux-0.2.0-x86_64.AppImage`. Needs FUSE (`sudo apt install libfuse2t64` on Ubuntu 24.04).
 
 ## Features
 
 - Workspaces in a sidebar, each showing its current directory and git branch
 - Split panes right/down, resize by dragging dividers
+- Drag a pane by its header onto another pane: drop on an edge to dock it there, or in the middle to swap
 - Layout, sizes and each pane's directory are saved and restored on relaunch
 - Bundled JetBrains Mono + Nerd Font symbols, so powerlevel10k/starship prompts render out of the box
 - GPU (WebGL) rendering with pixel-aligned box and powerline glyphs
@@ -44,6 +45,7 @@ npm run dist     # build AppImage + .deb into dist/
 | Ctrl+Shift+N | New workspace |
 | Ctrl+PgUp / Ctrl+PgDn | Previous / next workspace |
 | Double-click workspace | Rename |
+| Drag pane header | Move pane (edge = dock, middle = swap) |
 
 ## Architecture
 
@@ -63,7 +65,7 @@ main process (Node)                         renderer (React)
 
 1. Agent status in the sidebar: a local socket that Claude Code hooks report to (working / needs input / done), shown as dots per workspace.
 2. Shells that survive closing the app: move PtyManager into a background daemon the app connects to.
-3. Drag panes between splits and workspaces; drag-reorder workspaces.
+3. Drag panes to other workspaces; drag-reorder workspaces.
 4. AppArmor profile so the AppImage and dev builds can keep Chromium's sandbox.
 5. Swap xterm.js for libghostty-vt.
 

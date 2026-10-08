@@ -12,6 +12,15 @@ interface Props {
   onClose: (id: string) => void
 }
 
+// Keys shown as keycaps in the sidebar footer.
+const SHORTCUTS: [string[], string][] = [
+  [['Ctrl+Shift', 'D'], 'Split right'],
+  [['Ctrl+Shift', 'E'], 'Split down'],
+  [['Ctrl+Shift', 'W'], 'Close pane'],
+  [['Ctrl+Shift', 'N'], 'New workspace'],
+  [['Ctrl', 'PgUp/Dn'], 'Switch workspace']
+]
+
 const shortPath = (path: string | null | undefined, home: string): string =>
   !path ? '' : path === home ? '~' : path.startsWith(home + '/') ? '~' + path.slice(home.length) : path
 
@@ -70,11 +79,18 @@ export function Sidebar({ workspaces, activeId, meta, homeDir, onSelect, onNew, 
         + New workspace
       </button>
       <div className="shortcuts">
-        <div>Ctrl+Shift+D split right</div>
-        <div>Ctrl+Shift+E split down</div>
-        <div>Ctrl+Shift+W close pane</div>
-        <div>Ctrl+Shift+N new workspace</div>
-        <div>Ctrl+PgUp/PgDn switch</div>
+        <div className="shortcuts-title">Shortcuts</div>
+        {SHORTCUTS.map(([keys, label]) => (
+          <div className="shortcut" key={label}>
+            <span className="shortcut-label">{label}</span>
+            <span className="shortcut-keys">
+              {keys.map((k) => (
+                <kbd key={k}>{k}</kbd>
+              ))}
+            </span>
+          </div>
+        ))}
+        <div className="shortcut-hint">Drag a pane's header to move it</div>
       </div>
     </aside>
   )

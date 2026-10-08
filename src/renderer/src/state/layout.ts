@@ -22,17 +22,52 @@ export function listPanes(node: LayoutNode): Extract<LayoutNode, { type: 'pane' 
 
 const equal = (n: number): number[] => Array.from({ length: n }, () => 100 / n)
 
-/** Put a new pane next to `paneId`. Joins the parent split when it already runs in `dir`, so repeated splits stay flat. */
-export function splitPane(root: LayoutNode, paneId: string, dir: SplitDir, pane: LayoutNode): LayoutNode {
+/**
+ * Put `pane` next to `paneId` (after it, or before it when `before` is set).
+ * Joins the parent split when it already runs in `dir`, so repeated splits stay flat.
+ */
+export function splitPane(root: LayoutNode, paneId: string, dir: SplitDir, pane: LayoutNode, before = false): LayoutNode {
   if (root.type === 'pane') {
-    return root.id === paneId ? { type: 'split', id: uid(), dir, children: [root, pane], sizes: [50, 50] } : root
+    if (root.id !== paneId) return root
+    return { type: 'split', id: uid(), dir, children: before ? [pane, root] : [root, pane], sizes: [50, 50] }
   }
   const idx = root.children.findIndex((c) => c.type === 'pane' && c.id === paneId)
   if (idx >= 0 && root.dir === dir) {
-    const children = [...root.children.slice(0, idx + 1), pane, ...root.children.slice(idx + 1)]
+    const at = before ? idx : idx + 1
+    const children = [...root.children.slice(0, at), pane, ...root.children.slice(at)]
     return { ...root, children, sizes: equal(children.length) }
   }
-  return { ...root, children: root.children.map((c) => splitPane(c, paneId, dir, pane)) }
+  return { ...root, children: root.children.map((c) => splitPane(c, paneId, dir, pane, before)) }
+}
+
+/** Where a dragged pane lands relative to the pane it is dropped on. `center` swaps the two. */
+export type DropEdge = 'left' | 'right' | 'top' | 'bottom' | 'center'
+
+function findPane(node: LayoutNode, id: string): LayoutNode | null {
+  if (node.type === 'pane') return node.id === id ? node : null
+  for (const c of node.children) {
+    const found = findPane(c, id)
+    if (found) return found
+  }
+  return null
+}
+
+function swapPanes(node: LayoutNode, a: LayoutNode, b: LayoutNode): LayoutNode {
+  if (node.type === 'pane') return node.id === a.id ? b : node.id === b.id ? a : node
+  return { ...node, children: node.children.map((c) => swapPanes(c, a, b)) }
+}
+
+/** Move pane `srcId` beside (or onto, for `center`) pane `targetId`. The pane keeps its id, so its terminal survives. */
+export function movePane(root: LayoutNode, srcId: string, targetId: string, edge: DropEdge): LayoutNode {
+  if (srcId === targetId) return root
+  const src = findPane(root, srcId)
+  const target = findPane(root, targetId)
+  if (!src || !target) return root
+  if (edge === 'center') return swapPanes(root, src, target)
+  const rest = removePane(root, srcId)
+  if (!rest) return root
+  const dir: SplitDir = edge === 'left' || edge === 'right' ? 'row' : 'column'
+  return splitPane(rest, targetId, dir, src, edge === 'left' || edge === 'top')
 }
 
 /** Remove a pane; splits left with one child collapse into that child. Returns null when nothing is left. */

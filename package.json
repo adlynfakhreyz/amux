@@ -1,6 +1,6 @@
 {
   "name": "amux",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A wmux/cmux-style terminal multiplexer for Linux: workspace sidebar, draggable split panes, session persistence.",
   "keywords": [
     "terminal",

@@ -5,6 +5,7 @@ import { SplitView } from './components/SplitView'
 import { destroyPane } from './terminal/registry'
 import {
   listPanes,
+  movePane,
   newPane,
   newSession,
   newWorkspace,
@@ -21,6 +22,7 @@ const SAVE_DEBOUNCE_MS = 1000
 export function App(): React.JSX.Element | null {
   const [session, setSession] = useState<Session | null>(null)
   const [meta, setMeta] = useState<Record<string, PaneMeta>>({})
+  const [draggingId, setDraggingId] = useState<string | null>(null)
   const sessionRef = useRef(session)
   sessionRef.current = session
 
@@ -84,13 +86,23 @@ export function App(): React.JSX.Element | null {
     })
   }
 
-  const closePane = (): void => {
-    if (!active) return
-    const id = active.activePaneId
+  const closePane = (id = active?.activePaneId): void => {
+    if (!active || !id) return
     const root = removePane(active.root, id)
     destroyPane(id)
     if (!root) return closeWorkspace(active.id)
-    updateWorkspace(active.id, (w) => ({ ...w, root, activePaneId: listPanes(root)[0].id }))
+    updateWorkspace(active.id, (w) => ({
+      ...w,
+      root,
+      activePaneId: w.activePaneId === id ? listPanes(root)[0].id : w.activePaneId
+    }))
+  }
+
+  const titleOf = (paneId: string, cwd?: string): string => {
+    const dir = meta[paneId]?.cwd ?? cwd ?? ''
+    const name = dir === api.homeDir ? '~' : dir.split('/').pop() || '/'
+    const branch = meta[paneId]?.branch
+    return branch ? `${name}  ⎇ ${branch}` : name
   }
 
   const addWorkspace = async (): Promise<void> => {
@@ -108,6 +120,8 @@ export function App(): React.JSX.Element | null {
   }
 
   // App shortcuts are caught in the capture phase, before the focused terminal sees the key.
+  const draggingRef = useRef(draggingId)
+  draggingRef.current = draggingId
   const handlers = useRef({ split, closePane, addWorkspace, cycleWorkspace })
   handlers.current = { split, closePane, addWorkspace, cycleWorkspace }
   useEffect(() => {
@@ -117,6 +131,7 @@ export function App(): React.JSX.Element | null {
       if (e.ctrlKey && e.shiftKey && e.code === 'KeyD') void h.split('row')
       else if (e.ctrlKey && e.shiftKey && e.code === 'KeyE') void h.split('column')
       else if (e.ctrlKey && e.shiftKey && e.code === 'KeyW') h.closePane()
+      else if (e.code === 'Escape' && draggingRef.current) setDraggingId(null)
       else if (e.ctrlKey && e.shiftKey && e.code === 'KeyN') void h.addWorkspace()
       else if (e.ctrlKey && e.code === 'PageDown') h.cycleWorkspace(1)
       else if (e.ctrlKey && e.code === 'PageUp') h.cycleWorkspace(-1)
@@ -148,8 +163,17 @@ export function App(): React.JSX.Element | null {
         <SplitView
           node={active.root}
           activePaneId={active.activePaneId}
+          draggingId={draggingId}
+          titleOf={titleOf}
           onFocusPane={(id) => updateWorkspace(active.id, (w) => ({ ...w, activePaneId: id }))}
+          onClosePane={(id) => closePane(id)}
           onResize={(splitId, sizes) => updateWorkspace(active.id, (w) => ({ ...w, root: setSizes(w.root, splitId, sizes) }))}
+          onDragStart={setDraggingId}
+          onDragEnd={() => setDraggingId(null)}
+          onMovePane={(srcId, targetId, edge) => {
+            setDraggingId(null)
+            updateWorkspace(active.id, (w) => ({ ...w, root: movePane(w.root, srcId, targetId, edge), activePaneId: srcId }))
+          }}
         />
       </main>
     </div>
