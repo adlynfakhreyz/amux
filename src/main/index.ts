@@ -23,7 +23,9 @@ function createWindow(): void {
     width: 1280,
     height: 800,
     title: 'lynmux',
-    backgroundColor: '#14161b',
+    // Transparent window: the renderer paints translucent backgrounds so desktop blur (e.g. Blur my Shell) shows through.
+    transparent: true,
+    backgroundColor: '#00000000',
     autoHideMenuBar: true,
     icon,
     webPreferences: {

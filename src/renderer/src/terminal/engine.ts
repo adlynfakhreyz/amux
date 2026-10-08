@@ -23,7 +23,8 @@ export const FONT_FAMILY_NAMES = ['JetBrains Mono', 'Symbols Nerd Font Mono']
 const fontFamily = [...FONT_FAMILY_NAMES.map((f) => `'${f}'`), 'monospace'].join(', ')
 
 const theme = {
-  background: '#14161b',
+  // Transparent so the pane's CSS background (and its opacity setting) shows through.
+  background: '#00000000',
   foreground: '#d7dae0',
   cursor: '#d7dae0',
   selectionBackground: '#3a3f4b'
@@ -49,6 +50,7 @@ export function createXtermEngine(fontSize = 13): TerminalEngine {
     cursorBlink: true,
     scrollback: 10000,
     allowProposedApi: true,
+    allowTransparency: true,
     // Draw box/block/shade and powerline glyphs procedurally (like Ghostty) so prompt segments join cleanly. WebGL only.
     customGlyphs: true,
     rescaleOverlappingGlyphs: true,

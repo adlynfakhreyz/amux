@@ -22,6 +22,8 @@ export interface UiSettings {
   sidebarWidth: number
   sidebarMode: SidebarMode
   sidebarOpen: boolean
+  /** Background opacity, 0.5 to 1. */
+  opacity: number
 }
 
 export interface Session {

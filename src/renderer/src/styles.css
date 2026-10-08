@@ -1,6 +1,8 @@
 :root {
-  --bg: #14161b;
-  --bg-sidebar: #0f1115;
+  /* Background opacity (Settings > Ctrl+Shift+[ / ]). Only backgrounds use it, so text stays crisp. */
+  --alpha: 1;
+  --bg: rgb(20 22 27 / var(--alpha));
+  --bg-sidebar: rgb(15 17 21 / var(--alpha));
   --bg-hover: #1c1f26;
   --bg-active: #232733;
   --border: #262a33;
@@ -19,7 +21,8 @@ body,
 #root {
   height: 100%;
   margin: 0;
-  background: var(--bg);
+  /* The window itself is transparent; panes and sidebar paint their own (possibly translucent) backgrounds. */
+  background: transparent;
   color: var(--text);
   font-family: system-ui, sans-serif;
   font-size: 13px;
@@ -44,6 +47,8 @@ body,
 
 /* Hover mode: the sidebar floats over the panes (so terminals never resize) and slides in from the left. */
 .sidebar-floating {
+  /* Floats over terminal text, so keep it nearly opaque regardless of the opacity setting. */
+  background: rgb(15 17 21 / 0.97);
   position: absolute;
   top: 0;
   bottom: 0;
@@ -247,7 +252,7 @@ body.resizing-sidebar {
 .shortcuts {
   padding: 10px 12px 12px;
   border-top: 1px solid var(--border);
-  background: #12141a;
+  background: rgb(0 0 0 / 0.12);
 }
 
 .shortcuts-title {
@@ -298,6 +303,7 @@ kbd {
 .workspace-view {
   flex: 1;
   min-width: 0;
+  background: var(--bg);
 }
 
 .pane {
@@ -434,4 +440,9 @@ kbd {
 
 .resize-column {
   height: 3px;
+}
+
+/* xterm.css paints the viewport solid black; keep it clear so the pane background (and its opacity) shows. */
+.xterm .xterm-viewport {
+  background-color: transparent !important;
 }
